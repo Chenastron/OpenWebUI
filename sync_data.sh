@@ -9,12 +9,12 @@ fi
 mkdir -p ./data
 
 # 从 WebDAV 下载webui.db文件
-# echo "正在从 WebDAV 下载数据库文件..."
-# curl -L --fail --user "$WEBDAV_USERNAME:$WEBDAV_PASSWORD" "$WEBDAV_URL/webui.db" -o "./data/webui.db" || {
-#     echo "下载失败，脚本退出"
-#     exit 1
-# }
-# echo "下载成功"
+echo "正在从 WebDAV 下载数据库文件..."
+curl -L --fail --user "$WEBDAV_USERNAME:$WEBDAV_PASSWORD" "$WEBDAV_URL/webui.db" -o "./data/webui.db" || {
+    echo "下载失败，脚本退出"
+    exit 1
+}
+echo "下载成功"
 
 # 定义同步函数
 sync_data() {
@@ -33,11 +33,11 @@ sync_data() {
             
             echo "同步到 WebDAV..."
 
-            # 先覆盖Webdav目录下默认的webui.db文件（方便下次拉取的时候就是最新版本）
+            # 先上传以日期命名的数据库文件
             curl -L -T "./data/webui.db" --user "$WEBDAV_USERNAME:$WEBDAV_PASSWORD" "$WEBDAV_URL/$FILENAME" && {
                 echo "WebDAV 上传成功: $FILENAME"
                 
-                # 再上传以日期命名的数据库文件
+                # 再覆盖Webdav目录下默认的webui.db文件（方便下次拉取的时候就是最新版本）
                 curl -L -T "./data/webui.db" --user "$WEBDAV_USERNAME:$WEBDAV_PASSWORD" "$WEBDAV_URL/webui.db" && {
                     echo "WebDAV 更新主文件成功"
                 } || {
