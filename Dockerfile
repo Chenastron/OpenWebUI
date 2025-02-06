@@ -1,4 +1,4 @@
-FROM ghcr.io/open-webui/open-webui:main
+FROM ghcr.io/open-webui/open-webui:0.5.10
 
 COPY sync_data.sh sync_data.sh
 
