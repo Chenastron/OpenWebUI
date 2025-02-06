@@ -1,4 +1,4 @@
-FROM fossandroid/openwebui:latest
+FROM ghcr.io/open-webui/open-webui:main
 
 COPY sync_data.sh sync_data.sh
 
