@@ -10,7 +10,7 @@ mkdir -p ./data
 
 # 从 WebDAV 下载webui.db文件
 echo "正在从 WebDAV 下载数据库文件..."
-curl -v -L --fail --user "$WEBDAV_USERNAME:$WEBDAV_PASSWORD" "$WEBDAV_URL/webui.db" -o "./data/webui.db" || {
+curl -v -L --fail --user "$WEBDAV_USERNAME:$WEBDAV_PASSWORD" "$WEBDAV_URL/open-webui/webui.db" -o "./data/webui.db" || {
     echo "下载失败，脚本退出"
     exit 1
 }
@@ -34,11 +34,11 @@ sync_data() {
             echo "同步到 WebDAV..."
 
             # 先上传以日期命名的数据库文件
-            curl -L -T "./data/webui.db" --user "$WEBDAV_USERNAME:$WEBDAV_PASSWORD" "$WEBDAV_URL/$FILENAME" && {
+            curl -L -T "./data/webui.db" --user "$WEBDAV_USERNAME:$WEBDAV_PASSWORD" "$WEBDAV_URL/open-webui/$FILENAME" && {
                 echo "WebDAV 上传成功: $FILENAME"
                 
                 # 再覆盖Webdav目录下默认的webui.db文件（方便下次拉取的时候就是最新版本）
-                curl -L -T "./data/webui.db" --user "$WEBDAV_USERNAME:$WEBDAV_PASSWORD" "$WEBDAV_URL/webui.db" && {
+                curl -L -T "./data/webui.db" --user "$WEBDAV_USERNAME:$WEBDAV_PASSWORD" "$WEBDAV_URL/open-webui/webui.db" && {
                     echo "WebDAV 更新主文件成功"
                 } || {
                     echo "WebDAV 更新主文件失败"
@@ -46,7 +46,7 @@ sync_data() {
             } || {
                 echo "WebDAV 上传失败，等待重试..."
                 sleep 10
-                curl -L -T "./data/webui.db" --user "$WEBDAV_USERNAME:$WEBDAV_PASSWORD" "$WEBDAV_URL/$FILENAME" || {
+                curl -L -T "./data/webui.db" --user "$WEBDAV_USERNAME:$WEBDAV_PASSWORD" "$WEBDAV_URL/open-webui/$FILENAME" || {
                     echo "重试失败，放弃上传。"
                 }
             }
